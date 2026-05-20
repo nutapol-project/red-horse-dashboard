@@ -143,7 +143,7 @@ function MetricCard({ label, value, unit = "", flagged, sub }) {
 
 function ScoreGauge({ score, size = 200 }) {
   const pct = Math.round(Math.min(score, 1) * 100);
-  const color = pct >= 80 ? "#ef4444" : pct >= 50 ? "#f59e0b" : "#22c55e";
+  const color = pct >= 80 ? "#ef4444" : pct >= 40 ? "#f59e0b" : "#22c55e";
   const data = [{ value: pct, fill: color }, { value: 100 - pct, fill: "#1f2937" }];
   return (
     <div className="relative flex flex-col items-center">
@@ -163,7 +163,7 @@ function ScoreGauge({ score, size = 200 }) {
 
 function MiniGauge({ score, size = 100 }) {
   const pct = Math.round(Math.min(score, 1) * 100);
-  const color = pct >= 80 ? "#ef4444" : pct >= 50 ? "#f59e0b" : "#22c55e";
+  const color = pct >= 80 ? "#ef4444" : pct >= 40 ? "#f59e0b" : "#22c55e";
   const data = [{ value: pct, fill: color }, { value: 100 - pct, fill: "#1f2937" }];
   return (
     <div className="relative flex flex-col items-center">
