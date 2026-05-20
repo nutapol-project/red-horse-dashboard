@@ -257,8 +257,8 @@ export default function AssessForm({ onResult }) {
   // ── Submit ─────────────────────────────────────────────────────────────────
   const handleSubmit = async () => {
     // Validation
-    if (!form.footprint.device_imei) { setError("กรุณากรอก Device IMEI"); return; }
-    if (!form.footprint.ip_address)  { setError("กรุณากรอก IP Address");  return; }
+    if (!form.footprint.device_imei) { setError("Please fill in Device IMEI"); return; }
+    if (!form.footprint.ip_address)  { setError("Please fill in IP Address");  return; }
 
     setLoading(true);
     setError(null);
@@ -302,7 +302,7 @@ export default function AssessForm({ onResult }) {
       {/* ── Preset Buttons ── */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
         <div className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">
-          ⚡ Quick Preset — เลือก Case สำเร็จรูป
+          ⚡ Quick Preset — Select a Ready-made Case
         </div>
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -327,8 +327,8 @@ export default function AssessForm({ onResult }) {
           ))}
         </div>
         <div className="text-xs text-gray-600 mt-3">
-          💡 เลือก Preset แล้วกด <span className="text-purple-400 font-bold">Run Fraud Assessment</span> ได้เลย
-          หรือแก้ค่าเองด้านล่าง
+          💡 Select a preset and click <span className="text-purple-400 font-bold">Run Fraud Assessment</span> directly,
+           or customize the values manually in the fields below.
         </div>
       </div>
 
@@ -391,15 +391,24 @@ export default function AssessForm({ onResult }) {
       {/* ── Info Note ── */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-3">
         <div className="text-xs text-gray-500 space-y-1">
-          <div>📌 <span className="text-gray-400 font-semibold">Keystroke Intervals</span> — จะถูก generate อัตโนมัติ 20 ค่า
+          <div>
+            📌 <span className="text-gray-400 font-semibold">Keystroke Intervals</span>
+            {" — "}Auto-generated 20 values based on typing speed
             {activePreset === "HIGH"
-              ? <span className="text-red-400 ml-1">(Robotic: 40–55ms ← Fraud Pattern)</span>
-              : <span className="text-green-400 ml-1">(Human: varied based on WPM)</span>}
+              ? <span className="text-red-400 ml-1">(Robotic: 40–55ms — Fraud Pattern)</span>
+              : <span className="text-green-400 ml-1">(Human: varied intervals based on WPM)</span>}
           </div>
-          <div>📌 <span className="text-gray-400 font-semibold">IMEI Blacklist</span> — ทดสอบใช้ <code className="text-purple-400">IMEI_FRAUD_001</code> ถึง <code className="text-purple-400">IMEI_FRAUD_005</code></div>
-          <div>📌 <span className="text-gray-400 font-semibold">IP Blacklist</span> — ทดสอบใช้ <code className="text-purple-400">10.0.0.1</code>, <code className="text-purple-400">192.168.100.1</code>, <code className="text-purple-400">172.16.0.99</code></div>
+          <div>
+            📌 <span className="text-gray-400 font-semibold">IMEI Blacklist</span>
+            {" — "}Use <code className="text-purple-400">IMEI_FRAUD_001</code> to <code className="text-purple-400">IMEI_FRAUD_005</code> to trigger a blacklist hit
+          </div>
+          <div>
+            📌 <span className="text-gray-400 font-semibold">IP Blacklist</span>
+            {" — "}Use <code className="text-purple-400">10.0.0.1</code>, <code className="text-purple-400">192.168.100.1</code>, or <code className="text-purple-400">172.16.0.99</code> to trigger an IP flag
+          </div>
         </div>
       </div>
+
 
       {/* ── Error Message ── */}
       {error && (

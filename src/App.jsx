@@ -316,22 +316,21 @@ function GNNGraphViz({ result }) {
   ];
 
   const allEdges = [
-    { x1:260, y1:145, x2:130, y2:55,  label:"USED_DEVICE",    type:"main"  },
-    { x1:260, y1:145, x2:390, y2:55,  label:"CONNECTED_FROM", type:"main"  },
+    { x1:260, y1:145, x2:130, y2:55,  label:"USED_DEVICE",    type:"main"              },
+    { x1:260, y1:145, x2:390, y2:55,  label:"CONNECTED_FROM", type:"main"              },
     ...(hasPeers && peerCount >= 1 ? [
-      { x1:260, y1:145, x2:90,  y2:240, label:"SHARES_WITH",  type:"peer"  },
-      { x1:90,  y1:240, x2:130, y2:55,  label:"USED_DEVICE",  type:"fraud", dash:true },
+      { x1:260, y1:145, x2:90,  y2:240, label:"SHARES_WITH",  type:"peer"              },
+      { x1:90,  y1:240, x2:130, y2:55,  label:"USED_DEVICE",  type:"fraud", dash:true  },
     ] : []),
     ...(hasPeers && peerCount >= 2 ? [
-      { x1:260, y1:145, x2:430, y2:240, label:"SHARES_WITH",  type:"peer"  },
-      { x1:430, y1:240, x2:130, y2:55,  label:"USED_DEVICE",  type:"fraud", dash:true },
+      { x1:260, y1:145, x2:430, y2:240, label:"SHARES_WITH",  type:"peer"              },
+      { x1:430, y1:240, x2:130, y2:55,  label:"USED_DEVICE",  type:"fraud", dash:true  },
     ] : []),
   ];
   const edges = allEdges.slice(0, edges_count);
 
-  const getEdgeColor = (type) => ({
-    main: "#6b7280", peer: nodeColor, fraud: "#f87171",
-  }[type] ?? "#6b7280");
+  const getEdgeColor = (type) =>
+    ({ main:"#6b7280", peer:nodeColor, fraud:"#f87171" }[type] ?? "#6b7280");
 
   const getMarker = (type) =>
     type === "fraud" ? "arr-red"
@@ -342,7 +341,7 @@ function GNNGraphViz({ result }) {
   const getTooltip = (node) => ({
     user:   { title:"Target User",  detail:`Score: ${(score*100).toFixed(1)}%`, flag: isFlagged },
     device: { title:"Device Node",  detail:"IMEI identifier",                   flag: isFlagged },
-    ip:     { title:"IP Address",   detail:"Connection origin",                 flag: false },
+    ip:     { title:"IP Address",   detail:"Connection origin",                 flag: false     },
     peer:   { title:"Peer Account", detail:"Shares device/network",             flag: isFlagged },
   }[node.type]);
 
@@ -366,7 +365,7 @@ function GNNGraphViz({ result }) {
           </filter>
         </defs>
 
-        {/* Edges */}
+        {/* ── Edges ── */}
         {edges.map((e, i) => (
           <g key={i}>
             <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
@@ -383,7 +382,7 @@ function GNNGraphViz({ result }) {
           </g>
         ))}
 
-        {/* Nodes */}
+        {/* ── Nodes ── */}
         {nodes.map(node => {
           const tip   = getTooltip(node);
           const isHov = hovered === node.id;
@@ -429,7 +428,7 @@ function GNNGraphViz({ result }) {
           );
         })}
 
-        {/* Hover Tooltip */}
+        {/* ── Hover Tooltip ── */}
         {hovered && (() => {
           const node = nodes.find(n => n.id === hovered);
           if (!node) return null;
@@ -440,7 +439,9 @@ function GNNGraphViz({ result }) {
             <g style={{ pointerEvents:"none" }}>
               <rect x={tx} y={ty} width={110} height={48}
                 rx="6" fill="#1e293b" stroke={node.stroke} strokeWidth="1" opacity="0.97"/>
-              <text x={tx+8} y={ty+15} fill="#f1f5f9" fontSize="9" fontWeight="bold">{tip.title}</text>
+              <text x={tx+8} y={ty+15} fill="#f1f5f9" fontSize="9" fontWeight="bold">
+                {tip.title}
+              </text>
               <text x={tx+8} y={ty+28} fill="#94a3b8" fontSize="8">{tip.detail}</text>
               <text x={tx+8} y={ty+41}
                 fill={tip.flag ? "#f87171" : "#4ade80"}
@@ -451,8 +452,8 @@ function GNNGraphViz({ result }) {
           );
         })()}
 
-        {/* Cluster Score Badge */}
-        <rect x="10" y="10" width="130" height="32" rx="8"
+        {/* ── Cluster Score Badge ── */}
+        <rect x="10" y="10" width="132" height="32" rx="8"
           fill={isFlagged ? "#7f1d1d" : "#14532d"}
           stroke={isFlagged ? "#ef4444" : "#22c55e"}
           strokeWidth="1.5" opacity="0.9"/>
@@ -466,11 +467,12 @@ function GNNGraphViz({ result }) {
           </tspan>
         </text>
 
-        {/* Legend */}
+        {/* ── Legend ── */}
         {[
-          { cx:370, fill:"#4c1d95", stroke:"#a78bfa", label:"Target User" },
-          { cx:415, fill:isFlagged?"#7f1d1d":"#14532d", stroke:nodeColor, label:isFlagged?"Fraud Node":"Safe Node" },
-          { cx:460, fill:"#1e3a5f", stroke:"#60a5fa", label:"IP Node" },
+          { cx:370, fill:"#4c1d95", stroke:"#a78bfa", label:"Target User"                           },
+          { cx:415, fill:isFlagged?"#7f1d1d":"#14532d", stroke:nodeColor,
+            label: isFlagged ? "Fraud Node" : "Safe Node"                                            },
+          { cx:468, fill:"#1e3a5f", stroke:"#60a5fa", label:"IP Node"                               },
         ].map(({ cx, fill, stroke, label }) => (
           <g key={label}>
             <circle cx={cx} cy="275" r="7" fill={fill} stroke={stroke} strokeWidth="1.5"/>
@@ -1153,127 +1155,71 @@ export default function Dashboard() {
           </>
         )}
 
-        {/* ════════ TAB: AUDIT LOG ════════ */}
-        {tab === "audit" && (
-          <>
-            <SectionTitle icon="📋" title="Audit Log"
-              subtitle="Real-time processing trace from all pipeline stages" />
-
-            {/* Filter Buttons */}
-            <div className="flex gap-2 flex-wrap">
-              {["ALL","INFO","WARN","CRIT"].map(f => (
-                <button key={f} onClick={() => setLogFilter(f)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                    logFilter === f
-                      ? f === "CRIT" ? "bg-red-900 border-red-600 text-red-300"
-                        : f === "WARN" ? "bg-yellow-900 border-yellow-600 text-yellow-300"
-                        : f === "INFO" ? "bg-blue-900 border-blue-600 text-blue-300"
-                        : "bg-purple-900 border-purple-600 text-purple-300"
-                      : "bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500"
-                  }`}>
-                  {f === "CRIT" ? "🔴" : f === "WARN" ? "🟡" : f === "INFO" ? "🔵" : "📋"} {f}
-                  {" "}({f === "ALL" ? AUDIT_LOGS.length : AUDIT_LOGS.filter(l=>l.level===f).length})
-                </button>
-              ))}
-            </div>
-
-            {/* Log Entries */}
-            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-              <div className="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-gray-700">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-xs text-gray-400 ml-2 font-mono">red_horse.log — {filteredLogs.length} entries</span>
-              </div>
-              <div className="divide-y divide-gray-800 max-h-96 overflow-y-auto">
-                {filteredLogs.map((log, i) => {
-                  const s = logStyle[log.level];
-                  return (
-                    <div key={i} className={`flex items-start gap-3 px-4 py-2.5 hover:bg-gray-800 transition-colors`}>
-                      <span className="text-gray-600 font-mono text-xs shrink-0 mt-0.5">{log.time}</span>
-                      <span className={`px-1.5 py-0.5 rounded text-xs font-bold shrink-0 ${
-                        log.level === "CRIT" ? "bg-red-900 text-red-300"
-                        : log.level === "WARN" ? "bg-yellow-900 text-yellow-300"
-                        : "bg-blue-900 text-blue-300"}`}>
-                        {log.level}
-                      </span>
-                      <span className="text-purple-400 font-mono text-xs shrink-0">[{log.engine}]</span>
-                      <span className={`text-xs font-mono ${
-                        log.level === "CRIT" ? "text-red-300"
-                        : log.level === "WARN" ? "text-yellow-300"
-                        : "text-gray-300"}`}>
-                        {log.msg}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Stats Summary */}
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label:"INFO",  count: AUDIT_LOGS.filter(l=>l.level==="INFO").length, color:"text-blue-400",   bg:"bg-blue-950",   border:"border-blue-800" },
-                { label:"WARN",  count: AUDIT_LOGS.filter(l=>l.level==="WARN").length, color:"text-yellow-400", bg:"bg-yellow-950", border:"border-yellow-800" },
-                { label:"CRIT",  count: AUDIT_LOGS.filter(l=>l.level==="CRIT").length, color:"text-red-400",    bg:"bg-red-950",    border:"border-red-800" },
-              ].map(({ label, count, color, bg, border }) => (
-                <div key={label} className={`rounded-xl border ${border} ${bg} p-4 text-center`}>
-                  <div className="text-xs text-gray-400 mb-1">{label} Events</div>
-                  <div className={`text-3xl font-black ${color}`}>{count}</div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* ════════ TAB: ASSESS (Real Backend) ════════ */}
+                {/* ════════ TAB: ASSESS (Real Backend) ════════ */}
         {tab === "assess" && (
           <div className="space-y-4">
-            <SectionTitle icon="🔬" title="Live Assessment — Real Backend"
-              subtitle="กรอกข้อมูลแล้วส่งไปคำนวณที่ FastAPI Backend จริง (localhost:8000)" />
+            <SectionTitle
+              icon="🔬"
+              title="Live Assessment — Real Backend"
+              subtitle="Submit account data to FastAPI backend at localhost:8000 for real-time fraud scoring" />
 
             <AssessForm onResult={(result) => setApiResult(result)} />
 
             {apiResult && (
               <div className="space-y-3">
 
-                {/* KPI Row */}
+                {/* ── KPI Row ── */}
                 <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
                   <div className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">
-                    📊 Real API Response
+                    📊 API Response — Real-time Result
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {[
                       { label:"Final Score",
                         value:(apiResult.risk_breakdown.final_score*100).toFixed(1)+"%",
-                        color: apiResult.risk_breakdown.final_score>=0.8 ? "text-red-400"
-                          : apiResult.risk_breakdown.final_score>=0.4 ? "text-yellow-400"
-                          : "text-green-400" },
+                        color: apiResult.risk_breakdown.final_score >= 0.8 ? "text-red-400"
+                             : apiResult.risk_breakdown.final_score >= 0.4 ? "text-yellow-400"
+                             : "text-green-400",
+                        sub: apiResult.risk_breakdown.final_score >= 0.8 ? "HIGH RISK"
+                           : apiResult.risk_breakdown.final_score >= 0.4 ? "MEDIUM RISK"
+                           : "LOW RISK" },
                       { label:"Engine A",
                         value:(apiResult.risk_breakdown.engine_a_score*100).toFixed(1)+"%",
-                        color:"text-purple-400" },
+                        color:"text-purple-400", sub:"Statistical" },
                       { label:"Engine B",
                         value:(apiResult.risk_breakdown.engine_b_score*100).toFixed(1)+"%",
-                        color:"text-blue-400" },
+                        color:"text-blue-400", sub:"GNN Graph" },
                       { label:"P(Mule)",
                         value:(apiResult.engine_a.bayesian_mule_probability*100).toFixed(2)+"%",
-                        color: apiResult.engine_a.bayesian_flagged ? "text-red-400" : "text-green-400" },
-                    ].map(({ label, value, color }) => (
+                        color: apiResult.engine_a.bayesian_flagged ? "text-red-400" : "text-green-400",
+                        sub:"Bayesian posterior" },
+                    ].map(({ label, value, color, sub }) => (
                       <div key={label} className="bg-gray-800 rounded-xl p-3 text-center">
                         <div className="text-xs text-gray-500 mb-1">{label}</div>
                         <div className={`text-xl font-black ${color}`}>{value}</div>
+                        <div className="text-xs text-gray-600 mt-0.5">{sub}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Score Gauge + Signal Flags */}
+                {/* ── Score Gauge + Signal Flags ── */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-col items-center justify-center">
+                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-4
+                    flex flex-col items-center justify-center">
                     <ScoreGauge score={apiResult.risk_breakdown.final_score} />
                     <div className="text-center mt-2">
+                      <div className="font-bold text-sm" style={{
+                        color: apiResult.risk_breakdown.final_score >= 0.8 ? "#ef4444"
+                             : apiResult.risk_breakdown.final_score >= 0.4 ? "#f59e0b"
+                             : "#22c55e"
+                      }}>
+                        {apiResult.risk_breakdown.final_score >= 0.8 ? "HIGH RISK"
+                         : apiResult.risk_breakdown.final_score >= 0.4 ? "MEDIUM RISK"
+                         : "LOW RISK"}
+                      </div>
                       <div className="text-xs text-gray-500 font-mono mt-1">
-                        user_id: {apiResult.user_id}
+                        ID: {apiResult.user_id}
                       </div>
                     </div>
                   </div>
@@ -1283,16 +1229,21 @@ export default function Dashboard() {
                       Signal Flags
                     </div>
                     {[
-                      { label:"Keystroke Variance σ²",  val: apiResult.engine_a.variance_flagged,
-                        detail: `σ² = ${apiResult.engine_a.typing_variance.toFixed(4)} ms²` },
-                      { label:"Benford's Law Deviation", val: apiResult.engine_a.benford_flagged,
-                        detail: `TVD = ${apiResult.engine_a.benford_deviation.toFixed(4)}` },
-                      { label:"Bayesian P(Mule)",        val: apiResult.engine_a.bayesian_flagged,
-                        detail: `P = ${(apiResult.engine_a.bayesian_mule_probability*100).toFixed(2)}%` },
-                      { label:"GNN Cluster Match",       val: apiResult.engine_b.cluster_flagged,
-                        detail: `score = ${apiResult.engine_b.cluster_fraud_score.toFixed(4)}` },
+                      { label:"Keystroke Variance σ²",
+                        val: apiResult.engine_a.variance_flagged,
+                        detail:`σ² = ${apiResult.engine_a.typing_variance.toFixed(4)} ms²` },
+                      { label:"Benford's Law Deviation",
+                        val: apiResult.engine_a.benford_flagged,
+                        detail:`TVD = ${apiResult.engine_a.benford_deviation.toFixed(4)}` },
+                      { label:"Bayesian P(Mule)",
+                        val: apiResult.engine_a.bayesian_flagged,
+                        detail:`P = ${(apiResult.engine_a.bayesian_mule_probability*100).toFixed(2)}%` },
+                      { label:"GNN Cluster Match",
+                        val: apiResult.engine_b.cluster_flagged,
+                        detail:`score = ${apiResult.engine_b.cluster_fraud_score.toFixed(4)}` },
                     ].map(({ label, val, detail }) => (
-                      <div key={label} className="flex justify-between items-center py-1.5 border-b border-gray-800 last:border-0">
+                      <div key={label}
+                        className="flex justify-between items-center py-1.5 border-b border-gray-800 last:border-0">
                         <div>
                           <div className="text-xs text-gray-400">{label}</div>
                           <div className="text-xs text-gray-600 font-mono">{detail}</div>
@@ -1303,41 +1254,54 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Score Breakdown */}
+                {/* ── Score Breakdown ── */}
                 <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
                   <div className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">
                     Score Breakdown
                   </div>
                   <ProgressBar
                     label={`Engine A (60%) — ${(apiResult.risk_breakdown.engine_a_score*100).toFixed(1)}%`}
-                    value={apiResult.risk_breakdown.engine_a_score} color="#a78bfa"
-                    sub="Statistical · Keystroke · Bayesian · Benford" />
+                    value={apiResult.risk_breakdown.engine_a_score}
+                    color="#a78bfa"
+                    sub="Statistical · Keystroke Variance · Bayesian Inference · Benford Deviation" />
                   <ProgressBar
                     label={`Engine B (40%) — ${(apiResult.risk_breakdown.engine_b_score*100).toFixed(1)}%`}
-                    value={apiResult.risk_breakdown.engine_b_score} color="#60a5fa"
-                    sub="GNN Graph · Blacklist · Isolation Forest" />
+                    value={apiResult.risk_breakdown.engine_b_score}
+                    color="#60a5fa"
+                    sub="GNN Graph · IMEI/IP Blacklist · Isolation Forest" />
                   <ProgressBar
-                    label={`SIM Mismatch Penalty — ${(apiResult.risk_breakdown.sim_mismatch_penalty*100).toFixed(0)}%`}
-                    value={apiResult.risk_breakdown.sim_mismatch_penalty} color="#f87171"
-                    sub="Fixed +0.10 if SIM owner mismatch" />
+                    label={`SIM Mismatch Penalty — +${(apiResult.risk_breakdown.sim_mismatch_penalty*100).toFixed(0)}%`}
+                    value={apiResult.risk_breakdown.sim_mismatch_penalty}
+                    color="#f87171"
+                    sub="Fixed penalty +0.10 applied when SIM card owner does not match account holder" />
                   <ProgressBar
-                    label={`Copy-Paste Penalty — ${(apiResult.risk_breakdown.copy_paste_penalty*100).toFixed(0)}%`}
-                    value={apiResult.risk_breakdown.copy_paste_penalty} color="#fb923c"
-                    sub="Fixed +0.08 if clipboard paste detected" />
-                  <div className="mt-2 pt-2 border-t border-gray-800 flex justify-between items-center">
-                    <span className="text-xs text-gray-400 font-semibold">Final Score (capped at 1.0)</span>
-                    <span className="text-lg font-black" style={{
+                    label={`Copy-Paste Penalty — +${(apiResult.risk_breakdown.copy_paste_penalty*100).toFixed(0)}%`}
+                    value={apiResult.risk_breakdown.copy_paste_penalty}
+                    color="#fb923c"
+                    sub="Fixed penalty +0.08 applied when clipboard paste is detected in registration form" />
+                  <div className="mt-3 pt-3 border-t border-gray-800 flex justify-between items-center">
+                    <div>
+                      <div className="text-xs text-gray-400 font-semibold">Final Score (capped at 1.0)</div>
+                      <div className="text-xs text-gray-600 font-mono mt-0.5">
+                        min({(apiResult.risk_breakdown.engine_a_score*0.6 +
+                              apiResult.risk_breakdown.engine_b_score*0.4 +
+                              apiResult.risk_breakdown.sim_mismatch_penalty +
+                              apiResult.risk_breakdown.copy_paste_penalty).toFixed(4)}, 1.0)
+                      </div>
+                    </div>
+                    <span className="text-2xl font-black" style={{
                       color: apiResult.risk_breakdown.final_score >= 0.8 ? "#ef4444"
-                        : apiResult.risk_breakdown.final_score >= 0.4 ? "#f59e0b" : "#22c55e"
+                           : apiResult.risk_breakdown.final_score >= 0.4 ? "#f59e0b"
+                           : "#22c55e"
                     }}>
                       {(apiResult.risk_breakdown.final_score * 100).toFixed(2)}%
                     </span>
                   </div>
                 </div>
 
-                {/* Policy Banner */}
-                <div className={`rounded-xl border-2 p-4
-                  ${apiResult.policy.action === "BLOCK_OUTBOUND_TRANSACTION"
+                {/* ── Policy Action Banner ── */}
+                <div className={`rounded-xl border-2 p-4 ${
+                  apiResult.policy.action === "BLOCK_OUTBOUND_TRANSACTION"
                     ? "border-red-600 bg-red-950"
                     : apiResult.policy.action === "LIMIT_TRANSACTION_CAP"
                     ? "border-yellow-600 bg-yellow-950"
@@ -1345,13 +1309,14 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-2xl">
                       {apiResult.policy.action === "BLOCK_OUTBOUND_TRANSACTION" ? "🚫"
-                        : apiResult.policy.action === "LIMIT_TRANSACTION_CAP" ? "⚠️" : "✅"}
+                       : apiResult.policy.action === "LIMIT_TRANSACTION_CAP"    ? "⚠️"
+                       : "✅"}
                     </span>
                     <div>
-                      <div className={`text-lg font-black
-                        ${apiResult.policy.action === "BLOCK_OUTBOUND_TRANSACTION" ? "text-red-400"
-                          : apiResult.policy.action === "LIMIT_TRANSACTION_CAP" ? "text-yellow-400"
-                          : "text-green-400"}`}>
+                      <div className={`text-lg font-black ${
+                        apiResult.policy.action === "BLOCK_OUTBOUND_TRANSACTION" ? "text-red-400"
+                        : apiResult.policy.action === "LIMIT_TRANSACTION_CAP"   ? "text-yellow-400"
+                        : "text-green-400"}`}>
                         {apiResult.policy.action}
                       </div>
                       <div className="text-xs text-gray-400">{apiResult.policy.reason}</div>
@@ -1376,18 +1341,24 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* GNN Graph Visualization */}
+                {/* ── GNN Graph Visualization ── */}
                 <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
                   <div className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">
                     🕸️ GNN Graph Visualization
                   </div>
                   <div className="grid grid-cols-4 gap-2 mb-4">
                     {[
-                      { label:"Graph Nodes",   value: apiResult.engine_b.graph_node_count, color:"text-cyan-400" },
-                      { label:"Graph Edges",   value: apiResult.engine_b.graph_edge_count, color:"text-cyan-400" },
-                      { label:"Cluster Score", value: apiResult.engine_b.cluster_fraud_score.toFixed(4),
+                      { label:"Graph Nodes",
+                        value: apiResult.engine_b.graph_node_count,
+                        color:"text-cyan-400" },
+                      { label:"Graph Edges",
+                        value: apiResult.engine_b.graph_edge_count,
+                        color:"text-cyan-400" },
+                      { label:"Cluster Score",
+                        value: apiResult.engine_b.cluster_fraud_score.toFixed(4),
                         color: apiResult.engine_b.cluster_flagged ? "text-red-400" : "text-green-400" },
-                      { label:"Status",        value: apiResult.engine_b.cluster_flagged ? "FLAGGED" : "CLEAR",
+                      { label:"Cluster Status",
+                        value: apiResult.engine_b.cluster_flagged ? "FLAGGED" : "CLEAR",
                         color: apiResult.engine_b.cluster_flagged ? "text-red-400" : "text-green-400" },
                     ].map(({ label, value, color }) => (
                       <div key={label} className="bg-gray-800 rounded-xl p-3 text-center">
@@ -1399,13 +1370,14 @@ export default function Dashboard() {
                   <GNNGraphViz result={apiResult} />
                 </div>
 
-
-                {/* Raw JSON */}
+                {/* ── Raw JSON Response ── */}
                 <details className="bg-gray-900 border border-gray-800 rounded-xl">
-                  <summary className="px-4 py-3 text-xs text-gray-400 cursor-pointer hover:text-white select-none">
-                    📄 Raw JSON Response — คลิกเพื่อดู/ซ่อน
+                  <summary className="px-4 py-3 text-xs text-gray-400 cursor-pointer
+                    hover:text-white select-none transition-colors">
+                    📄 Raw JSON Response — Click to expand / collapse
                   </summary>
-                  <pre className="px-4 pb-4 text-xs text-green-400 overflow-auto max-h-64 leading-relaxed">
+                  <pre className="px-4 pb-4 text-xs text-green-400 overflow-auto
+                    max-h-64 leading-relaxed">
                     {JSON.stringify(apiResult, null, 2)}
                   </pre>
                 </details>
@@ -1414,6 +1386,7 @@ export default function Dashboard() {
             )}
           </div>
         )}
+
 
       </div>
 
